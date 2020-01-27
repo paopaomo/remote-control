@@ -1,0 +1,6 @@
+const CONTROL_STATUS = {
+    CONTROL: 1,
+    BE_CONTROLLED: 2
+};
+
+export { CONTROL_STATUS }

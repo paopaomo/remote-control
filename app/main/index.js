@@ -1,20 +1,8 @@
-const { app, BrowserWindow } = require('electron');
-const isDev = require('electron-is-dev');
-const path = require('path');
-
-let win;
+const { app } = require('electron');
+const handleIPC = require('./ipc');
+const { createMainWindow } = require('./windows/main');
 
 app.on('ready', () => {
-    win = new BrowserWindow({
-        width: 1000,
-        height: 600,
-        webPreferences: {
-            nodeIntegration: true
-        }
-    });
-    if(isDev) {
-        win.loadURL('http://localhost:3000');
-    } else {
-        win.loadFile(path.resolve(__dirname, '../renderer/pages/control/index.html'));
-    }
+    createMainWindow();
+    handleIPC();
 });
