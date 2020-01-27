@@ -41,9 +41,17 @@ function App() {
 
   const renderOperation = (
       <>
-          <div>你的控制码{localCode}</div>
-          <input type='text' value={remoteCode} onChange={changeRemoteCode} />
-          <button onClick={startControl}>确认</button>
+          <div className='title'>
+              <span>本机识别码:</span>
+              <span className='code'>{localCode}</span>
+          </div>
+          <div className='tip'>
+              请发送识别码给小伙伴用来控制本机
+          </div>
+          <div className='operation'>
+              <input type='text' value={remoteCode} onChange={changeRemoteCode} />
+              <button onClick={startControl}>远程协助</button>
+          </div>
       </>
   );
 
