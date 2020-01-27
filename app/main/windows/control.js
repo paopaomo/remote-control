@@ -11,7 +11,7 @@ const createControlWindow = () => {
             nodeIntegration: true
         }
     });
-    win.loadFile(path.resolve(__dirname, '../renderer/pages/control/index.html'));
+    win.loadFile(path.resolve(__dirname, '../../renderer/pages/control/index.html'));
 };
 
 module.exports = { createControlWindow };
