@@ -29,7 +29,7 @@ function App() {
       return () => {
           ipcRenderer.removeListener('control-state-change', handleControlState);
       }
-  }, [login, handleControlState]);
+  }, []);
 
   const changeRemoteCode = useCallback((e) => {
       setRemoteCode(e.target.value);
