@@ -14,4 +14,8 @@ const createControlWindow = () => {
     win.loadFile(path.resolve(__dirname, '../../renderer/pages/control/index.html'));
 };
 
-module.exports = { createControlWindow };
+const sendControlWindow = (channel, ...args) => {
+    win.webContents.send(channel, ...args);
+};
+
+module.exports = { createControlWindow, sendControlWindow };

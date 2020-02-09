@@ -1,7 +1,7 @@
 const { ipcMain } = require('electron');
 const { CONTROL_STATUS } = require('./consts/controlStatus');
 const { sendMainWindow } = require('./windows/main');
-const { createControlWindow } = require('./windows/control');
+const { createControlWindow, sendControlWindow } = require('./windows/control');
 const signal = require('./signal');
 
 module.exports = () => {
@@ -18,5 +18,20 @@ module.exports = () => {
     });
     signal.on('be-controlled', (data) => {
         sendMainWindow('control-state-change', data.remote, CONTROL_STATUS.BE_CONTROLLED);
+    });
+    ipcMain.on('forward', (e, event, data) => {
+        signal.send('forward', { event, data });
+    });
+    signal.on('offer', (data) => {
+        sendMainWindow('offer', data);
+    });
+    signal.on('answer', (data) => {
+        sendControlWindow('answer', data);
+    });
+    signal.on('puppet-candidate', (data) => {
+        sendControlWindow('candidate', data);
+    });
+    signal.on('control-candidate', (data) => {
+        sendMainWindow('candidate', data);
     });
 };

@@ -1,4 +1,4 @@
-import { desktopCapturer } from 'electron';
+import { desktopCapturer, ipcRenderer } from 'electron';
 
 const getScreenStream = async () => {
     const sources = await desktopCapturer.getSources({ types: ['screen'] });
@@ -26,6 +26,18 @@ const peerConnection = new window.RTCPeerConnection({});
 
 peerConnection.onicecandidate = (e) => {
     console.log('candidate', JSON.stringify(e.candidate));
+    if(e.candidate) {
+        ipcRenderer.send('forward', 'puppet-candidate', e.candidate);
+    }
+};
+
+const createAnswer = async (offer) => {
+    const screenStream = await getScreenStream();
+    peerConnection.addStream(screenStream);
+    await peerConnection.setRemoteDescription(offer);
+    await peerConnection.setLocalDescription(await peerConnection.createAnswer());
+    console.log('answer', JSON.stringify(peerConnection.localDescription));
+    return peerConnection.localDescription;
 };
 
 let candidates = [];
@@ -42,15 +54,11 @@ const addIceCandidate = async (candidate) => {
     }
 };
 
-window.addIceCandidate = addIceCandidate;
+ipcRenderer.on('offer', async(e, offer) => {
+    const answer = await createAnswer(offer);
+    ipcRenderer.send('forward', 'answer', { type: answer.type, sdp: answer.sdp });
+});
 
-const createAnswer = async (offer) => {
-    const screenStream = await getScreenStream();
-    peerConnection.addStream(screenStream);
-    await peerConnection.setRemoteDescription(offer);
-    await peerConnection.setLocalDescription(await peerConnection.createAnswer());
-    console.log('answer', JSON.stringify(peerConnection.localDescription));
-    return peerConnection.localDescription;
-};
-
-window.createAnswer = createAnswer;
+ipcRenderer.on('candidate', (e, candidate) => {
+    addIceCandidate(candidate);
+});

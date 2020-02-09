@@ -1,4 +1,5 @@
 const EventEmitter = require('events');
+const { ipcRenderer } = require('electron');
 const peer = new EventEmitter();
 
 // peer.on('robot', (type, data) => {
@@ -14,7 +15,10 @@ const peer = new EventEmitter();
 const peerConnection = new window.RTCPeerConnection({});
 
 peerConnection.onicecandidate = (e) => {
-  console.log('candidate', JSON.stringify(e.candidate));
+    console.log('candidate', JSON.stringify(e.candidate));
+    if(e.candidate) {
+        ipcRenderer.send('forward', 'control-candidate', e.candidate);
+    }
 };
 
 let candidates = [];
@@ -31,8 +35,6 @@ const addIceCandidate = async (candidate) => {
     }
 };
 
-window.addIceCandidate = addIceCandidate;
-
 const createOffer = async() => {
     const offer = await peerConnection.createOffer({
         offerToReceiveAudio: false,
@@ -43,17 +45,25 @@ const createOffer = async() => {
     return peerConnection.localDescription;
 };
 
-createOffer();
-
 const setRemote = async (answer) => {
     await peerConnection.setRemoteDescription(answer);
 };
-
-window.setRemote = setRemote;
 
 peerConnection.onaddstream = (e) => {
     console.log('add-stream', e);
     peer.emit('add-stream', e.stream);
 };
+
+createOffer().then((offer) => {
+    ipcRenderer.send('forward', 'offer', { type: offer.type, sdp: offer.sdp });
+});
+
+ipcRenderer.on('answer', (e, data) => {
+    setRemote(data);
+});
+
+ipcRenderer.on('candidate', (e, candidate) => {
+    addIceCandidate(candidate);
+});
 
 module.exports = peer;
