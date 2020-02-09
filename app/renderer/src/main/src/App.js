@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { ipcRenderer } from 'electron';
 import { isEmpty } from 'lodash';
 import { CONTROL_STATUS } from './consts/controlStatus';
+import './peer-puppet.js';
 import './App.css';
 
 function App() {
