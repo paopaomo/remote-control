@@ -2,16 +2,21 @@ const { ipcMain } = require('electron');
 const { CONTROL_STATUS } = require('./consts/controlStatus');
 const { sendMainWindow } = require('./windows/main');
 const { createControlWindow } = require('./windows/control');
+const signal = require('./signal');
 
 module.exports = () => {
-    ipcMain.handle('login', () => {
-        // mock, return code
-        const code = Math.floor(Math.random() * (999999 - 100000)) + 10000;
-        return Promise.resolve(code);
+    ipcMain.handle('login', async () => {
+        const { code } = await signal.invoke('login', null, 'logined');
+        return code;
     });
-    ipcMain.on('control', (e, remoteCode) => {
-        // server interaction
-        sendMainWindow('control-state-change', remoteCode, CONTROL_STATUS.CONTROL);
+    ipcMain.on('control', async(e, remoteCode) => {
+        await signal.invoke('control', { remote: remoteCode });
+    });
+    signal.on('controlled', (data) => {
+        sendMainWindow('control-state-change', data.remote, CONTROL_STATUS.CONTROL);
         createControlWindow();
+    });
+    signal.on('be-controlled', (data) => {
+        sendMainWindow('control-state-change', data.remote, CONTROL_STATUS.BE_CONTROLLED);
     });
 };
