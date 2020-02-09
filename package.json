@@ -21,12 +21,12 @@
   "homepage": "https://github.com/paopaomo/remote-control#readme",
   "devDependencies": {
     "concurrently": "^5.1.0",
-    "wait-on": "^4.0.0"
+    "wait-on": "^4.0.0",
+    "electron-rebuild": "^1.9.0",
+    "electron": "^7.1.10"
   },
   "dependencies": {
-    "electron": "^7.1.10",
     "electron-is-dev": "^1.1.0",
-    "electron-rebuild": "^1.9.0",
     "robotjs": "^0.6.0",
     "vkey": "^1.0.1"
   }
