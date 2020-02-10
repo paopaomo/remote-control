@@ -24,6 +24,24 @@ const getScreenStream = async () => {
 
 const peerConnection = new window.RTCPeerConnection({});
 
+peerConnection.ondatachannel = (e) => {
+    console.log('datachannel', e);
+    e.channel.onmessage = (e) => {
+        try {
+            const { type, data } = JSON.parse(e.data);
+            if(type === 'mouse') {
+                data.screen = {
+                    width: window.screen.width,
+                    height: window.screen.height
+                }
+            }
+            ipcRenderer.send('robot', type, data);
+        } catch(e) {
+            console.error(e);
+        }
+    }
+};
+
 peerConnection.onicecandidate = (e) => {
     console.log('candidate', JSON.stringify(e.candidate));
     if(e.candidate) {

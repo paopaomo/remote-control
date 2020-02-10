@@ -2,17 +2,23 @@ const EventEmitter = require('events');
 const { ipcRenderer } = require('electron');
 const peer = new EventEmitter();
 
-// peer.on('robot', (type, data) => {
-//     if(type === 'mouse') {
-//         data.screen = {
-//             width: window.screen.width,
-//             height: window.screen.height
-//         }
-//     }
-//     ipcRenderer.send('robot', type, data);
-// });
-
 const peerConnection = new window.RTCPeerConnection({});
+
+const dc = peerConnection.createDataChannel('robotChannel', { reliable: false });
+
+dc.onopen = () => {
+    peer.on('robot', (type, data) => {
+        dc.send(JSON.stringify({ type, data }));
+    });
+};
+
+dc.onmessage = (event) => {
+  console.log('message', event);
+};
+
+dc.onerror = (error) => {
+  console.log('error', error);
+};
 
 peerConnection.onicecandidate = (e) => {
     console.log('candidate', JSON.stringify(e.candidate));
