@@ -1,10 +1,28 @@
 const { app } = require('electron');
 const handleIPC = require('./ipc');
-const { createMainWindow } = require('./windows/main');
+const { createMainWindow, showMainWindow, closeMainWindow } = require('./windows/main');
 const robotControl = require('./robot');
 
-app.on('ready', () => {
-    createMainWindow();
-    handleIPC();
-    robotControl();
-});
+const gotTheLock = app.requestSingleInstanceLock();
+
+if(!gotTheLock) {
+    app.quit();
+} else {
+    app.on('second-instance', () => {
+        showMainWindow();
+    });
+
+    app.on('ready', () => {
+        createMainWindow();
+        handleIPC();
+        robotControl();
+    });
+
+    app.on('before-quit', () => {
+        closeMainWindow();
+    });
+
+    app.on('activate', () => {
+        showMainWindow();
+    });
+}
