@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 import { isEmpty } from 'lodash';
 import { CONTROL_STATUS } from './consts/controlStatus';
 import './peer-puppet.js';
 import './App.css';
+
+const { Menu, MenuItem } = remote;
 
 function App() {
   const [remoteCode, setRemoteCode] = useState('');
@@ -40,11 +42,21 @@ function App() {
       ipcRenderer.send('control', remoteCode);
   }, [remoteCode]);
 
+  const handleContextMenu = useCallback((e) => {
+      e.preventDefault();
+      const menu = new Menu();
+      menu.append(new MenuItem({
+          label: '复制',
+          role: 'copy'
+      }));
+      menu.popup();
+  }, []);
+
   const renderOperation = (
       <>
           <div className='title'>
               <span>本机识别码:</span>
-              <span className='code'>{localCode}</span>
+              <span className='code' onContextMenu={handleContextMenu}>{localCode}</span>
           </div>
           <div className='tip'>
               请发送识别码给小伙伴用来控制本机
