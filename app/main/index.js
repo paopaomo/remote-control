@@ -16,6 +16,7 @@ if(!gotTheLock) {
         createMainWindow();
         handleIPC();
         robotControl();
+        require('./trayAndMenu/index');
     });
 
     app.on('before-quit', () => {
