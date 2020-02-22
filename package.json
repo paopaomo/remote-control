@@ -1,5 +1,5 @@
 {
-  "name": "Mercurius",
+  "name": "mercurius",
   "version": "1.0.0",
   "description": "",
   "main": "app/main/index.js",
@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "concurrently \"npm run start:render\" \"wait-on http://localhost:3000 && npm run start:main\"",
     "start:main": "electron .",
-    "start:render": "cd app/renderer/src/main && yarn start"
+    "start:render": "cd app/renderer/src/main && yarn start",
+    "build:render": "cd app/renderer/src/main && yarn build"
   },
   "repository": {
     "type": "git",
