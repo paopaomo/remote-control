@@ -13,7 +13,8 @@
   },
   "scripts": {
     "start": "BROWSER=none react-app-rewired start",
-    "build": "react-scripts build",
+    "build": "react-app-rewired build",
+    "postbuild": "node ./build.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -34,6 +35,8 @@
   },
   "devDependencies": {
     "customize-cra": "^0.9.1",
+    "fs-extra": "^8.1.0",
     "react-app-rewired": "^2.1.5"
-  }
+  },
+  "homepage": "./"
 }
