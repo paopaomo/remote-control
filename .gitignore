@@ -107,5 +107,7 @@ dist
 .idea/
 
 # build/
-build/
+release/
 app/renderer/pages/main
+
+.DS_Store
