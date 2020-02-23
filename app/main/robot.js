@@ -12,19 +12,19 @@ const handleMouse = (data) => {
 };
 
 const handleKey = (data) => {
-    // data { keyCode, meta, alt, ctrl, shift }
+    // data { metaKey, altKey, ctrlKey, shiftKey, keyCode }
     const modifiers = [];
-    const { meta, alt, ctrl, shift, keyCode } = data;
-    if(meta) {
-        modifiers.push('meta');
+    const { metaKey, altKey, ctrlKey, shiftKey, keyCode } = data;
+    if(metaKey) {
+        modifiers.push('command');
     }
-    if(alt) {
+    if(altKey) {
         modifiers.push('alt');
     }
-    if(ctrl) {
-        modifiers.push('ctrl');
+    if(ctrlKey) {
+        modifiers.push('control');
     }
-    if(shift) {
+    if(shiftKey) {
         modifiers.push('shift');
     }
     const key = vkey[keyCode].toLowerCase();
