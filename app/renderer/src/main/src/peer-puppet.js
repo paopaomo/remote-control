@@ -45,7 +45,7 @@ peerConnection.ondatachannel = (e) => {
 peerConnection.onicecandidate = (e) => {
     console.log('candidate', JSON.stringify(e.candidate));
     if(e.candidate) {
-        ipcRenderer.send('forward', 'puppet-candidate', e.candidate);
+        ipcRenderer.send('forward', 'puppet-candidate', JSON.stringify(e.candidate));
     }
 };
 

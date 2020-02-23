@@ -23,7 +23,7 @@ dc.onerror = (error) => {
 peerConnection.onicecandidate = (e) => {
     console.log('candidate', JSON.stringify(e.candidate));
     if(e.candidate) {
-        ipcRenderer.send('forward', 'control-candidate', e.candidate);
+        ipcRenderer.send('forward', 'control-candidate', JSON.stringify(e.candidate));
     }
 };
 
