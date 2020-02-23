@@ -8,7 +8,10 @@
     "start": "concurrently \"npm run start:render\" \"wait-on http://localhost:3000 && npm run start:main\"",
     "start:main": "electron .",
     "start:render": "cd app/renderer/src/main && yarn start",
-    "build:render": "cd app/renderer/src/main && yarn build"
+    "build:render": "cd app/renderer/src/main && yarn build",
+    "build:mac": "npm run build:render && electron-builder --mac",
+    "build:win": "npm run build:render && electron-builder --win --ia32",
+    "postinstall": "electron-builder install-app-deps"
   },
   "repository": {
     "type": "git",
@@ -22,8 +25,10 @@
   "homepage": "https://github.com/paopaomo/remote-control#readme",
   "devDependencies": {
     "concurrently": "^5.1.0",
-    "wait-on": "^4.0.0",
-    "electron": "7.1.10"
+    "cross-env": "^7.0.0",
+    "electron": "7.1.10",
+    "electron-builder": "^22.3.2",
+    "wait-on": "^4.0.0"
   },
   "dependencies": {
     "electron-about-window": "^1.13.2",
@@ -31,5 +36,47 @@
     "robotjs": "^0.6.0",
     "vkey": "^1.0.1",
     "ws": "^7.2.1"
+  },
+  "build": {
+    "appId": "com.paopaomo.mercurius",
+    "productName": "Mercurius",
+    "files": "app",
+    "asar": false,
+    "extraFiles": [
+      "app/renderer/**/src"
+    ],
+    "directories": {
+      "buildResources": "resource",
+      "output": "release"
+    },
+    "copyright": "Copyright © 2020 paopaomo",
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "icon": "resources/icon.icns"
+    },
+    "dmg": {
+      "background": "resources/background.png",
+      "window": {
+        "width": 540,
+        "height": 380
+      },
+      "contents": [
+        {
+          "x": 410,
+          "y": 180,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 130,
+          "y": 180,
+          "type": "file"
+        }
+      ],
+      "iconSize": 128
+    }
   }
 }
