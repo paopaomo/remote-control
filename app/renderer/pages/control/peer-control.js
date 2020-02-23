@@ -35,7 +35,7 @@ const addIceCandidate = async (candidate) => {
     }
     if(peerConnection.remoteDescription && peerConnection.remoteDescription.type) {
         for(let i = 0; i < candidates.length; i++) {
-            await peerConnection.addIceCandidate(new RTCIceCandidate(candidates[i]));
+            await peerConnection.addIceCandidate(new RTCIceCandidate(JSON.parse(candidates[i])));
         }
         candidates = [];
     }
