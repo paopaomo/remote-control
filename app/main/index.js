@@ -12,6 +12,10 @@ if(!gotTheLock) {
         showMainWindow();
     });
 
+    app.on('will-finish-launching', () => {
+        require('./updater');
+    });
+
     app.on('ready', () => {
         createMainWindow();
         handleIPC();
