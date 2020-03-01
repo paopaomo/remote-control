@@ -1,9 +1,9 @@
 const { autoUpdater, app, dialog } = require('electron');
 
 if(process.platform === 'darwin') {
-    autoUpdater.setFeedURL(`http://127.0.0.1:8888/darwin?version=${app.getVersion()}`);
+    autoUpdater.setFeedURL(`http://127.0.0.1:8888/remote-control/releases/darwin?version=${app.getVersion()}`);
 } else {
-    autoUpdater.setFeedURL(`http://127.0.0.1:8888/win32?version=${app.getVersion()}`);
+    // todo
 }
 
 autoUpdater.checkForUpdates(); // 定时轮询,服务端推送
@@ -22,7 +22,6 @@ autoUpdater.on('update-downloaded', () => {
         });
         if(clickId === 0) {
             autoUpdater.quitAndInstall();
-            app.quit();
         }
     });
 });
